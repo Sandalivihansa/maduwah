@@ -1,0 +1,33 @@
+name: Deploy WhatsApp YouTube Music Bot
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Restore Session (if available)
+        run: |
+          if [ -f backup/auth_info.zip ]; then
+            unzip -o backup/auth_info.zip -d .
+            echo "Session restored successfully."
+          else
+            echo "No session backup found."
+          fi
+
+      - name: Start Bot
+        run: node index.js
